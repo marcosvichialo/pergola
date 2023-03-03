@@ -1,0 +1,51 @@
+/*
+Despregue dun toldo (sen volta atrás), cando se 
+detecta moita luz, o motor actívase durante
+7 segundos. Ao cabo deste tempo, o motor para.
+Cando hay moita luz a fotorresistencia(LDR)(A0)
+activa un rele(PIN 12) o cal activa un motor que ven 
+a representar o dun toldo, ao cabo de 7 segundos o toldo para.
+
+Autor: Marcos Antonio Mariño Mota
+Data: 27/02/2023
+
+*/
+
+#define RELE  12
+#define LDR   A0
+
+//int pinRele = 12;
+//int pinSensor = A0;
+int umbral = 950;
+int entrada = 0;
+bool releON = false;
+int contador = 100;
+
+void setup() {
+  pinMode(RELE, OUTPUT);
+  pinMode(LDR, INPUT);
+  Serial.begin(9600);
+}
+void loop() {
+  entrada = analogRead(LDR);
+  Serial.print("valor entrada LDR: ");
+  Serial.println(entrada);
+  
+  if (entrada > umbral) {
+    releON = true;
+  }
+  
+  if (contador > 0 && entrada > umbral) {
+    Serial.print("contador: ");
+    Serial.println(contador);
+    contador--;
+    delay(70);
+  }
+  else {
+    releON = false;
+  }
+  if (entrada < umbral) {
+    contador = 100;
+  }
+  digitalWrite(RELE, releON);
+}
